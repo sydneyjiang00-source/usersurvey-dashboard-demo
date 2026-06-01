@@ -4,7 +4,7 @@ An interactive dashboard that analyzes user-feedback survey responses for an
 AI SaaS product, turning raw open-text and multiple-choice answers into a clean,
 explorable visual report.
 
-> ⚠️ This is a portfolio demo built with **synthetic data** for a **fictional product**.
+> This is a portfolio demo built with **synthetic data** for a **fictional product**.
 > The real version was built on actual survey data during a marketing internship.
 
 ## What it does
