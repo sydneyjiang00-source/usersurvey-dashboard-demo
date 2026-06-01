@@ -1,5 +1,5 @@
 # User Survey Analysis Dashboard 
-[LINK](file:///Users/sydneyjiang/Desktop/user%20profile%20analysis%20demo.html)
+[LINK]([file:///Users/sydneyjiang/Desktop/user%20profile%20analysis%20demo.html](https://sydneyjiang00-source.github.io/usersurvey-dashboard-demo/))
 
 An interactive dashboard that analyzes user-feedback survey responses for an
 AI SaaS product, turning raw open-text and multiple-choice answers into a clean,
