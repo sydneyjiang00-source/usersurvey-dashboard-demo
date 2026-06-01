@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Quillo · Voice of User (Demo)</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#221b38; --ink2:#3d3357; --paper:#f7f5ff; --card:#ffffff;
+  --line:#e9e3f7; --teal:#7c5cfc; --teal-d:#5b3dd4; --amber:#a78bfa;
+  --terra:#e0507a; --muted:#8b85a0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.5;
+  background-image:radial-gradient(circle at 12% 8%, rgba(124,92,252,.07), transparent 40%),
+                   radial-gradient(circle at 90% 4%, rgba(167,139,250,.10), transparent 38%);}
+.wrap{max-width:1180px;margin:0 auto;padding:48px 28px 80px}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--teal-d);font-weight:500}
+.badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--teal-d);background:rgba(124,92,252,.10);
+  border:1px solid var(--line);border-radius:999px;padding:4px 12px;margin-bottom:14px}
+h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(34px,5vw,56px);
+  line-height:1.02;letter-spacing:-.02em;margin:10px 0 6px}
+h1 em{font-style:italic;font-weight:500;color:var(--teal-d)}
+.sub{color:var(--muted);font-size:15px;max-width:620px}
+.meta-line{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);
+  margin-top:14px;border-top:1px solid var(--line);padding-top:14px;display:flex;gap:22px;flex-wrap:wrap}
+.meta-line b{color:var(--ink);font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:34px 0 8px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 20px 18px;
+  position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent,var(--teal))}
+.kpi .label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted)}
+.kpi .num{font-family:'Fraunces',serif;font-size:42px;font-weight:600;line-height:1;margin:8px 0 2px;letter-spacing:-.01em}
+.kpi .note{font-size:12px;color:var(--muted)}
+.grid{display:grid;gap:18px;margin-top:18px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:1.3fr 1fr 1fr}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 22px 18px}
+.card h3{font-family:'Fraunces',serif;font-size:21px;font-weight:600;letter-spacing:-.01em}
+.card .cap{font-size:12.5px;color:var(--muted);margin:3px 0 16px}
+.chartbox{position:relative;width:100%}
+.section-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--teal-d);margin:44px 0 4px;display:flex;align-items:center;gap:10px}
+.section-tag::after{content:'';flex:1;height:1px;background:var(--line)}
+.insight{font-size:13px;color:var(--ink2);background:rgba(124,92,252,.07);
+  border-left:3px solid var(--teal);padding:10px 14px;border-radius:0 8px 8px 0;margin-top:14px}
+.insight b{color:var(--teal-d)}
+.warn{background:rgba(224,80,122,.08);border-left-color:var(--terra)}
+.warn b{color:var(--terra)}
+footer{margin-top:54px;border-top:1px solid var(--line);padding-top:18px;
+  font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted)}
+.reveal{opacity:0;transform:translateY(14px);animation:rise .7s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+@media(max-width:880px){.kpis{grid-template-columns:1fr 1fr}.g2,.g3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="reveal">
+    <div class="badge">Portfolio demo · synthetic data · fictional product</div><br>
+    <div class="eyebrow">Quillo · User Feedback Survey</div>
+    <h1>Voice of the <em>User</em></h1>
+    <p class="sub">A survey-analysis dashboard built from 1840 responses: who the users are, why they came, what they use instead, and what they want next. All figures are synthetic and for demonstration only.</p>
+    <div class="meta-line">
+      <span><b id="m-n"></b> responses</span>
+      <span><b id="m-range"></b></span>
+      <span>advocacy avg <b id="m-avg"></b> / 5</span>
+    </div>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi reveal" style="--accent:var(--teal);animation-delay:.05s"><div class="label">Total responses</div><div class="num" id="k1"></div><div class="note">Jan 2024 – May 2026</div></div>
+    <div class="kpi reveal" style="--accent:var(--amber);animation-delay:.12s"><div class="label">Avg advocacy</div><div class="num" id="k2"></div><div class="note">"share with a friend" 1–5</div></div>
+    <div class="kpi reveal" style="--accent:var(--teal-d);animation-delay:.19s"><div class="label">Are students</div><div class="num" id="k3"></div><div class="note">vs. working professionals</div></div>
+    <div class="kpi reveal" style="--accent:var(--terra);animation-delay:.26s"><div class="label">Top-box promoters</div><div class="num" id="k4"></div><div class="note">scored a perfect 5/5</div></div>
+  </div>
+
+  <div class="section-tag">01 · Advocacy &amp; satisfaction</div>
+  <div class="grid g2">
+    <div class="card reveal"><h3>How likely to share with a friend?</h3><p class="cap">Distribution of the 1–5 advocacy score (n=1822)</p><div class="chartbox" style="height:280px"><canvas id="cShare"></canvas></div>
+      <div class="insight"><b>Strong advocacy.</b> 58% gave a perfect 5 and 86% scored 4+. Only ~14% are detractors (≤3) — a healthy base for referral-led growth.</div>
+    </div>
+    <div class="card reveal" style="animation-delay:.08s"><h3>Advocacy by acquisition channel</h3><p class="cap">Avg score, channels with n≥15</p><div class="chartbox" style="height:280px"><canvas id="cScoreChan"></canvas></div>
+      <div class="insight"><b>LinkedIn &amp; video convert quality.</b> LinkedIn (4.55), YouTube (4.50) and Instagram (4.46) users rate highest — social/educational channels bring the most enthusiastic users.</div>
+    </div>
+  </div>
+
+  <div class="section-tag">02 · Who are the users</div>
+  <div class="grid g3">
+    <div class="card reveal"><h3>Research domains</h3><p class="cap">Grouped from free-text field of study</p><div class="chartbox" style="height:330px"><canvas id="cDomain"></canvas></div></div>
+    <div class="card reveal" style="animation-delay:.07s"><h3>Education level</h3><p class="cap">Highest completed</p><div class="chartbox" style="height:330px"><canvas id="cEdu"></canvas></div></div>
+    <div class="card reveal" style="animation-delay:.14s"><h3>Audience split</h3><p class="cap">Student status &amp; sector</p><div class="chartbox" style="height:150px"><canvas id="cStudent"></canvas></div><div class="chartbox" style="height:150px;margin-top:6px"><canvas id="cAcad"></canvas></div></div>
+  </div>
+  <div class="insight reveal">The audience skews <b>graduate &amp; academic</b>: 71% are students, ~60% hold a Masters or PhD, and academia outweighs industry ~2.5:1. Medicine, social sciences and life sciences are the deepest verticals.</div>
+
+  <div class="section-tag">03 · Acquisition</div>
+  <div class="grid g2">
+    <div class="card reveal"><h3>How did you hear about us?</h3><p class="cap">Normalized free-text channels</p><div class="chartbox" style="height:300px"><canvas id="cChan"></canvas></div>
+      <div class="insight"><b>SEO is the engine.</b> Google Search alone drives ~43% of attributed discovery. Referral ("friend") is second — consistent with the high advocacy scores. Paid (Google Ad) is small, leaving room to scale.</div>
+    </div>
+    <div class="card reveal" style="animation-delay:.08s"><h3>Competitive landscape</h3><p class="cap">Other tools users mention (n=1500 mentions)</p><div class="chartbox" style="height:300px"><canvas id="cTools"></canvas></div>
+      <div class="insight"><b>ChatGPT is the real competitor</b>, not other research tools — it's mentioned ~4.5x more than the nearest specialist tool. Positioning should answer "why not just ChatGPT?"</div>
+    </div>
+  </div>
+
+  <div class="section-tag">04 · What users want next</div>
+  <div class="card reveal"><h3>Feature-request themes</h3><p class="cap">Coded from 1290 open-text responses (a comment can span multiple themes)</p><div class="chartbox" style="height:330px"><canvas id="cThemes"></canvas></div>
+    <div class="insight"><b>Trust &amp; comprehension lead the roadmap.</b> Two themes tie at the top: <b>citation/reference accuracy</b> and <b>handling figures, equations &amp; tables</b> — both about trusting and fully understanding the content. Summary customization, export, and in-paper Q&amp;A follow.</div>
+  </div>
+
+  <div class="section-tag">05 · Trend over time</div>
+  <div class="card reveal"><h3>Monthly responses &amp; advocacy</h3><p class="cap">Bars = response volume · line = avg advocacy score</p><div class="chartbox" style="height:320px"><canvas id="cTrend"></canvas></div>
+    <div class="insight warn"><b>Watch the volume decline.</b> Monthly responses fell from ~110/mo in early 2025 to ~15/mo in 2026, and recent advocacy dipped below 4.0 in a few months. This likely reflects a smaller, noisier sample rather than a quality collapse — worth confirming the survey is still being surfaced to new users.</div>
+  </div>
+
+  <footer>Demo dashboard · synthetic data · fictional product · built with HTML + Chart.js · charts are interactive (hover for values)</footer>
+</div>
+
+<script>
+const D = {"meta": {"n": 1840, "start": "2024-01", "end": "2026-05"}, "monthly": [{"m": "2024-01", "n": 90, "avg": 4.5}, {"m": "2024-02", "n": 150, "avg": 4.45}, {"m": "2024-03", "n": 180, "avg": 4.4}, {"m": "2024-04", "n": 130, "avg": 4.42}, {"m": "2024-05", "n": 110, "avg": 4.38}, {"m": "2024-06", "n": 95, "avg": 4.35}, {"m": "2024-07", "n": 88, "avg": 4.4}, {"m": "2024-08", "n": 92, "avg": 4.3}, {"m": "2024-09", "n": 110, "avg": 4.38}, {"m": "2024-10", "n": 100, "avg": 4.42}, {"m": "2024-11", "n": 95, "avg": 4.3}, {"m": "2024-12", "n": 90, "avg": 4.5}, {"m": "2025-01", "n": 85, "avg": 4.4}, {"m": "2025-02", "n": 80, "avg": 4.45}, {"m": "2025-03", "n": 70, "avg": 4.38}, {"m": "2025-04", "n": 55, "avg": 4.4}, {"m": "2025-05", "n": 50, "avg": 4.42}, {"m": "2025-06", "n": 40, "avg": 4.35}, {"m": "2025-07", "n": 35, "avg": 4.3}, {"m": "2025-08", "n": 30, "avg": 4.4}, {"m": "2025-09", "n": 25, "avg": 4.45}, {"m": "2025-10", "n": 22, "avg": 4.3}, {"m": "2025-11", "n": 18, "avg": 4.2}, {"m": "2025-12", "n": 16, "avg": 4.25}, {"m": "2026-01", "n": 14, "avg": 4.0}, {"m": "2026-02", "n": 13, "avg": 3.9}, {"m": "2026-03", "n": 15, "avg": 4.1}, {"m": "2026-04", "n": 11, "avg": 4.0}, {"m": "2026-05", "n": 12, "avg": 3.95}], "edu": {"No College": 40, "Some College": 180, "Bachelors": 520, "Masters": 760, "PhD": 340}, "student": {"Yes": 1306, "No": 534}, "acad_ind": {"Academia": 720, "Industry": 280}, "share_dist": {"1": 28, "2": 34, "3": 190, "4": 520, "5": 1050}, "share_avg": 4.39, "promoters": 1050, "detractors": 252, "n_share": 1822, "channel": {"Google Search": 480, "Referred by friend": 210, "Instagram": 150, "LinkedIn": 95, "Other": 55, "Google Ad": 60, "YouTube": 48, "Twitter/X": 30, "Reddit": 22, "ChatGPT": 20, "TikTok": 9}, "tools": {"ChatGPT": 540, "Other": 380, "None": 140, "SciSpace": 120, "Elicit": 78, "Scholarcy": 40, "Consensus": 30, "ChatPDF": 28, "Perplexity": 26, "Gemini": 24, "Zotero": 22, "Scite": 20}, "tools_mention": 1500, "domain": {"Other": 470, "Medicine & Health": 220, "Social Sciences": 210, "Life Sciences": 180, "Business & Economics": 150, "Engineering": 145, "Computing & AI": 130, "Physical Sciences": 105, "Education": 70, "Humanities": 42, "Math & Statistics": 25, "Law": 18}, "themes": {"Reference / citation accuracy": 130, "Figures / equations / tables": 125, "Summary customization": 85, "Export / download": 78, "Chat / Q&A with paper": 76, "More free / cheaper access": 75, "Annotation / editing": 68, "Compare / multiple papers": 48, "Integrations / tools": 47, "Books / long documents": 25, "Languages / translation": 22}, "n_features": 1290, "score_by_channel": {"LinkedIn": [4.55, 95], "YouTube": [4.5, 48], "Instagram": [4.46, 150], "Referred by friend": [4.4, 210], "ChatGPT": [4.35, 20], "Google Search": [4.32, 480], "Google Ad": [4.28, 60], "Twitter/X": [4.25, 30], "Reddit": [4.2, 22]}};
+const C = {ink:'#221b38',muted:'#8b85a0',teal:'#7c5cfc',tealD:'#5b3dd4',amber:'#a78bfa',terra:'#e0507a',line:'#e9e3f7'};
+const PAL = ['#7c5cfc','#a78bfa','#5b3dd4','#c4b5fd','#8b6ef0','#6d4ad4','#b794f6','#9061f9','#7e57e0','#cdbcf7','#5e3db0','#a385e8'];
+Chart.defaults.font.family="'IBM Plex Sans',sans-serif";
+Chart.defaults.font.size=12;
+Chart.defaults.color=C.muted;
+const tip={backgroundColor:'#221b38',titleFont:{family:"'Fraunces',serif",size:13},bodyFont:{family:"'IBM Plex Mono',monospace",size:12},padding:10,cornerRadius:8,displayColors:false};
+const gridX={grid:{display:false},border:{color:C.line}};
+const gridY={grid:{color:'rgba(140,133,118,.16)'},border:{display:false}};
+const noLeg={legend:{display:false}};
+document.getElementById('k1').textContent=D.meta.n.toLocaleString();
+document.getElementById('k2').textContent=D.share_avg.toFixed(2);
+document.getElementById('k3').textContent=Math.round(100*D.student.Yes/(D.student.Yes+D.student.No))+'%';
+document.getElementById('k4').textContent=Math.round(100*D.promoters/D.n_share)+'%';
+document.getElementById('m-n').textContent=D.meta.n.toLocaleString();
+document.getElementById('m-range').textContent=D.meta.start+' → '+D.meta.end;
+document.getElementById('m-avg').textContent=D.share_avg.toFixed(2);
+const mono={ticks:{font:{family:"'IBM Plex Mono',monospace",size:11}}};
+new Chart(cShare,{type:'bar',data:{labels:['1','2','3','4','5'],datasets:[{data:[1,2,3,4,5].map(k=>D.share_dist[k]||0),backgroundColor:['#e0507a','#d96a9b','#c79ad0','#9b7ef0','#7c5cfc'],borderRadius:6}]},
+ options:{responsive:true,maintainAspectRatio:false,plugins:{...noLeg,tooltip:tip},scales:{x:{...gridX,...mono,title:{display:true,text:'score (1 = never · 5 = definitely)',color:C.muted}},y:{...gridY,...mono}}}});
+const sbc=Object.entries(D.score_by_channel).sort((a,b)=>b[1][0]-a[1][0]);
+new Chart(cScoreChan,{type:'bar',data:{labels:sbc.map(x=>x[0]),datasets:[{data:sbc.map(x=>x[1][0]),backgroundColor:sbc.map((x,i)=>i===0?C.tealD:C.teal),borderRadius:5}]},
+ options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{...noLeg,tooltip:{...tip,callbacks:{label:c=>'avg '+c.raw+'  (n='+sbc[c.dataIndex][1][1]+')'}}},scales:{x:{...gridY,min:4,max:4.7,...mono},y:{...gridX,...mono}}}});
+const dom=Object.entries(D.domain).filter(x=>x[0]!=='Other').sort((a,b)=>b[1]-a[1]);
+new Chart(cDomain,{type:'bar',data:{labels:dom.map(x=>x[0]),datasets:[{data:dom.map(x=>x[1]),backgroundColor:dom.map((_,i)=>PAL[i%PAL.length]),borderRadius:5}]},
+ options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{...noLeg,tooltip:tip},scales:{x:{...gridY,...mono},y:{...gridX,...mono}}}});
+const eduL=['No College','Some College','Bachelors','Masters','PhD'];
+new Chart(cEdu,{type:'bar',data:{labels:eduL,datasets:[{data:eduL.map(k=>D.edu[k]),backgroundColor:['#d8d0ee','#b8a8e8','#9b7ef0','#7c5cfc','#5b3dd4'],borderRadius:5}]},
+ options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{...noLeg,tooltip:tip},scales:{x:{...gridY,...mono},y:{...gridX,...mono}}}});
+new Chart(cStudent,{type:'doughnut',data:{labels:['Student','Professional'],datasets:[{data:[D.student.Yes,D.student.No],backgroundColor:[C.teal,C.amber],borderWidth:0}]},
+ options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{tooltip:tip,legend:{position:'right',labels:{boxWidth:10,font:{size:11}}},title:{display:true,text:'Student status',color:C.muted,font:{family:"'IBM Plex Mono',monospace",size:10},align:'start'}}}});
+new Chart(cAcad,{type:'doughnut',data:{labels:['Academia','Industry'],datasets:[{data:[D.acad_ind.Academia,D.acad_ind.Industry],backgroundColor:[C.tealD,C.terra],borderWidth:0}]},
+ options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{tooltip:tip,legend:{position:'right',labels:{boxWidth:10,font:{size:11}}},title:{display:true,text:'Academia vs industry (non-students)',color:C.muted,font:{family:"'IBM Plex Mono',monospace",size:10},align:'start'}}}});
+const chan=Object.entries(D.channel).filter(x=>x[0]!=='Other').sort((a,b)=>b[1]-a[1]);
+new Chart(cChan,{type:'bar',data:{labels:chan.map(x=>x[0]),datasets:[{data:chan.map(x=>x[1]),backgroundColor:chan.map((x,i)=>i===0?C.tealD:C.teal),borderRadius:5}]},
+ options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{...noLeg,tooltip:tip},scales:{x:{...gridY,...mono},y:{...gridX,...mono}}}});
+const tools=Object.entries(D.tools).filter(x=>!['Other','None'].includes(x[0])).sort((a,b)=>b[1]-a[1]);
+new Chart(cTools,{type:'bar',data:{labels:tools.map(x=>x[0]),datasets:[{data:tools.map(x=>x[1]),backgroundColor:tools.map((x,i)=>i===0?C.terra:C.amber),borderRadius:5}]},
+ options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{...noLeg,tooltip:tip},scales:{x:{...gridY,...mono},y:{...gridX,...mono}}}});
+const th=Object.entries(D.themes).sort((a,b)=>b[1]-a[1]);
+new Chart(cThemes,{type:'bar',data:{labels:th.map(x=>x[0]),datasets:[{data:th.map(x=>x[1]),backgroundColor:th.map((x,i)=>i<2?C.tealD:C.teal),borderRadius:5}]},
+ options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{...noLeg,tooltip:{...tip,callbacks:{label:c=>c.raw+' mentions'}}},scales:{x:{...gridY,...mono},y:{...gridX,...mono}}}});
+new Chart(cTrend,{data:{labels:D.monthly.map(m=>m.m),datasets:[
+  {type:'bar',label:'Responses',data:D.monthly.map(m=>m.n),backgroundColor:'rgba(124,92,252,.5)',borderRadius:3,yAxisID:'y'},
+  {type:'line',label:'Avg advocacy',data:D.monthly.map(m=>m.avg),borderColor:C.terra,backgroundColor:C.terra,tension:.3,pointRadius:0,borderWidth:2,yAxisID:'y1'}]},
+ options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{tooltip:tip,legend:{labels:{boxWidth:12,font:{size:11}}}},
+  scales:{x:{...gridX,ticks:{font:{family:"'IBM Plex Mono',monospace",size:9},maxRotation:90,minRotation:90}},
+   y:{...gridY,...mono,title:{display:true,text:'responses',color:C.muted}},
+   y1:{position:'right',min:3.5,max:5,grid:{display:false},border:{display:false},ticks:{font:{family:"'IBM Plex Mono',monospace",size:11},color:C.terra},title:{display:true,text:'avg score',color:C.terra}}}}});
+</script>
+</body>
+</html>
